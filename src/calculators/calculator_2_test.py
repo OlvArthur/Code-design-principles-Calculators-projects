@@ -11,6 +11,9 @@ class MathDriveHandlerMock(MathDriverHandlerInterface):
   def standard_deviation(self, numbers):
     # std deviation for the second process of the initial values [3,3.2,3.9,4.1]
     return 4.011356034870597
+  
+  def variance(self, numbers):
+    pass
 
 def test_calculate():
   requestMock = RequestMock({ 'numbers': [3,3.2,3.9,4.1] })

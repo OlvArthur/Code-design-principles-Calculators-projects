@@ -47,7 +47,7 @@ class Calculator3:
   def __format_response(self,initial_values: list[float], result_verification: bool) -> dict:
     result_message = ''
     
-    if result_verification: result_message = 'Sucess'
+    if result_verification: result_message = 'Success'
     else: result_message = 'Error! Variance is higher than numbers multiplication' 
 
     return {
