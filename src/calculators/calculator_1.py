@@ -1,3 +1,4 @@
+from src.errors.http_unprocessable_entity import HttpUnprocessableEntityError 
 from flask import Request as FlaskRequest 
 
 class Calculator1:
@@ -22,7 +23,7 @@ class Calculator1:
 
   def __validate_body(self, body: dict) -> float:
     if "number" not in body:
-      raise Exception('Invalid Body')
+      raise HttpUnprocessableEntityError('Invalid Body')
     
   def __first_process(self, first_number: float) -> float:
     result = (first_number / 4) + 7

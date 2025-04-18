@@ -1,6 +1,6 @@
 from flask import Request as FlaskRequest
 from src.drivers.interfaces.driver_handler_interface import MathDriverHandlerInterface
-
+from src.errors.http_unprocessable_entity import HttpUnprocessableEntityError
 class Calculator2:
   def __init__(self, math_driver_handler: MathDriverHandlerInterface):
     self.__math_driver_handler = math_driver_handler
@@ -31,7 +31,7 @@ class Calculator2:
 
   def __validate_body(self, body: dict) -> None:
     if 'numbers' not in body:
-      raise Exception('Invalid Body')
+      raise HttpUnprocessableEntityError('Invalid Body')
     
   def __format_response(self,initial_values: list[float], calc_result: float) -> dict:
     return {
