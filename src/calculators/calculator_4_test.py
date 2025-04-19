@@ -1,7 +1,9 @@
-from .calculator_2 import Calculator2
 from pytest import raises
-from src.drivers.numpy_handler import NumpyHandler
+
+from src.errors.http_unprocessable_entity import HttpUnprocessableEntityError
+from src.calculators.calculator_4 import Calculator4
 from src.drivers.interfaces.driver_handler_interface import MathDriverHandlerInterface
+from src.drivers.numpy_handler import NumpyHandler
 
 class RequestMock:
   def __init__(self, body: dict):
@@ -9,47 +11,48 @@ class RequestMock:
 
 class MathDriveHandlerMock(MathDriverHandlerInterface):
   def standard_deviation(self, numbers):
-    # std deviation for the second process of the initial values [3,3.2,3.9,4.1]
-    return 4.011356034870597
-  
+    pass
+
   def variance(self, numbers):
     pass
 
   def average(self, numbers):
-    pass
+    return 26.25
 
 def test_calculate():
-  requestMock = RequestMock({ 'numbers': [3,3.2,3.9,4.1] })
+  request_mock = RequestMock({ 'numbers': [2,5,8,90] })
 
-  calculator_2 = Calculator2(MathDriveHandlerMock())
-  formatted_response = calculator_2.calculate(requestMock)
-
-  assert isinstance(formatted_response, dict)
-  assert 'Calculator' in formatted_response['data']
-  assert 'initial_values' in formatted_response['data']
-  assert 'result' in formatted_response['data']
-
-  assert formatted_response['data']['result'] == .25
-
-def test_calculate_integration():
-  requestMock = RequestMock({ 'numbers': [3,3.2,3.9,4.1] })
-
-  calculator_2 = Calculator2(NumpyHandler())
-  formatted_response = calculator_2.calculate(requestMock)
+  calculator_4 = Calculator4(MathDriveHandlerMock())
+  
+  formatted_response = calculator_4.calculate(request_mock)
 
   assert isinstance(formatted_response, dict)
   assert 'Calculator' in formatted_response['data']
   assert 'initial_values' in formatted_response['data']
   assert 'result' in formatted_response['data']
 
-  assert formatted_response['data']['result'] == .25
+  assert formatted_response['data']['result'] == 26.25
+
+def test_calculate_with_integration():
+  request_mock = RequestMock({ 'numbers': [2,5,8,90] })
+
+  calculator_4 = Calculator4(NumpyHandler())
+  
+  formatted_response = calculator_4.calculate(request_mock)
+
+  assert isinstance(formatted_response, dict)
+  assert 'Calculator' in formatted_response['data']
+  assert 'initial_values' in formatted_response['data']
+  assert 'result' in formatted_response['data']
+
+  assert formatted_response['data']['result'] == 26.25
 
 def test_validate_body():
   requestMock = RequestMock({ 'notNumbers': [234,543,65] })
 
-  calculator1 = Calculator2(NumpyHandler())
+  calculator4 = Calculator4(MathDriveHandlerMock())
 
-  with raises(Exception) as exc_info:
-    calculator1.calculate(requestMock)
+  with raises(HttpUnprocessableEntityError) as exc_info:
+    calculator4.calculate(requestMock)
 
   assert str(exc_info.value) == 'Invalid Body'
